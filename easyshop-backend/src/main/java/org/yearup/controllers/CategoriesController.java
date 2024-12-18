@@ -66,11 +66,14 @@ public class CategoriesController
         return categoryDao.create(category);
     }
 
-    // TODO add annotation to call this method for a PUT (update) action - the url path must include the categoryId
-    // TODO add annotation to ensure that only an ADMIN can call this function
+    // add annotation to call this method for a PUT (update) action - the url path must include the categoryId ~DONE
+    // add annotation to ensure that only an ADMIN can call this function ~DONE
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}/update")
     public void updateCategory(@PathVariable int id, @RequestBody Category category)
     {
-        // TODO update the category by id
+        // update the category by id ~DONE
+        categoryDao.update(id, category);
     }
 
 
