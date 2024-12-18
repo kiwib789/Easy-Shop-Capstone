@@ -31,7 +31,7 @@ public class CategoriesController
         this.productDao = productDao;
     }
     // add the appropriate annotation for a get action ~DONE
-    @GetMapping
+    @GetMapping("/localhost:8080/categories/")
     public List<Category> getAll()
     {
         // find and return all categories ~DONE
