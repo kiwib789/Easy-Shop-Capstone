@@ -51,16 +51,19 @@ public class CategoriesController
     @GetMapping("{categoryId}/products")
     public List<Product> getProductsById(@PathVariable int categoryId)
     {
-        // TODO get a list of product by categoryId
-        return null;
+        // get a list of product by categoryId ~DONE
+        return productDao.listByCategoryId(categoryId);
     }
 
-    // TODO add annotation to call this method for a POST action
-    // TODO add annotation to ensure that only an ADMIN can call this function
+    // add annotation to call this method for a POST action ~DONE
+    // add annotation to ensure that only an ADMIN can call this function ~DONE
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/add")
+    @ResponseStatus(code = HttpStatus.CREATED)
     public Category addCategory(@RequestBody Category category)
     {
-        // TODO insert the category
-        return null;
+        // insert the category ~DONE
+        return categoryDao.create(category);
     }
 
     // TODO add annotation to call this method for a PUT (update) action - the url path must include the categoryId
