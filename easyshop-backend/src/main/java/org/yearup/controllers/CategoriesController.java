@@ -30,11 +30,12 @@ public class CategoriesController
         this.categoryDao = categoryDao;
         this.productDao = productDao;
     }
-    // TODO add the appropriate annotation for a get action
+    // add the appropriate annotation for a get action ~DONE
+    @GetMapping
     public List<Category> getAll()
     {
-        // TODO find and return all categories
-        return null;
+        // find and return all categories ~DONE
+        return categoryDao.getAllCategories();
     }
 
     // TODO add the appropriate annotation for a get action
