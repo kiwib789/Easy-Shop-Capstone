@@ -92,13 +92,37 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
     @Override
     public void update(int categoryId, Category category)
     {
-        // update category
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("""
+                    UPDATE categories
+                    SET category_id = ?, name = ?, description = ?
+                    WHERE category_id = ?
+                    """);
+            statement.setInt(1, category.getCategoryId());
+            statement.setString(2, category.getName());
+            statement.setString(3, category.getDescription());
+            statement.setInt(4, categoryId);
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } // update category
     }
     // TODO delete method
     @Override
     public void delete(int categoryId)
     {
-        // delete category
+        try (Connection connection = getConnection()) {
+            PreparedStatement statement = connection.prepareStatement("""
+                    DELETE FROM categories
+                    WHERE category_id = ?;
+                    """);
+            statement.setInt(1, categoryId);
+            statement.execute();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }  // delete category
     }
 
     private Category mapRow(ResultSet row) throws SQLException
@@ -107,12 +131,12 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
         String name = row.getString("name");
         String description = row.getString("description");
 
-        Category category = new Category()
-        {{
-            setCategoryId(categoryId);
-            setName(name);
-            setDescription(description);
-        }};
+        Category category = new Category();
+
+            category.setCategoryId(categoryId);
+            category.setName(name);
+            category.setDescription(description);
+
 
         return category;
     }

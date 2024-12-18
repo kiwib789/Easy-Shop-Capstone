@@ -31,7 +31,7 @@ public class CategoriesController
         this.productDao = productDao;
     }
     // add the appropriate annotation for a get action ~DONE
-    @GetMapping("/localhost:8080/categories/")
+    @GetMapping("")
     public List<Category> getAll()
     {
         // find and return all categories ~DONE
@@ -39,7 +39,7 @@ public class CategoriesController
     }
 
     // add the appropriate annotation for a get action ~DONE
-    @RequestMapping("/{id}")
+    @GetMapping("/{id}")
     public Category getById(@PathVariable int id)
     {
         // get the category by id ~DONE
@@ -48,7 +48,7 @@ public class CategoriesController
 
     // TODO the url to return all products in category 1 would look like this
     // https://localhost:8080/categories/1/products
-    @GetMapping("{categoryId}/products")
+    @GetMapping("/{categoryId}/products")
     public List<Product> getProductsById(@PathVariable int categoryId)
     {
         // get a list of product by categoryId ~DONE
@@ -58,7 +58,7 @@ public class CategoriesController
     // add annotation to call this method for a POST action ~DONE
     // add annotation to ensure that only an ADMIN can call this function ~DONE
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/add")
+    @PostMapping("")
     @ResponseStatus(code = HttpStatus.CREATED)
     public Category addCategory(@RequestBody Category category)
     {
@@ -69,7 +69,7 @@ public class CategoriesController
     // add annotation to call this method for a PUT (update) action - the url path must include the categoryId ~DONE
     // add annotation to ensure that only an ADMIN can call this function ~DONE
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/{id}/update")
+    @PutMapping("/{id}")
     public void updateCategory(@PathVariable int id, @RequestBody Category category)
     {
         // update the category by id ~DONE
@@ -80,7 +80,7 @@ public class CategoriesController
     // add annotation to call this method for a DELETE action - the url path must include the categoryId ~DONE
     // add annotation to ensure that only an ADMIN can call this function ~ DONE
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}/delete")
+    @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteCategory(@PathVariable int id)
     {

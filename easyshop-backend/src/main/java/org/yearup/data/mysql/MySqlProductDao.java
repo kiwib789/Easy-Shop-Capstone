@@ -18,14 +18,17 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
         super(dataSource);
     }
 
+    // Search method for finding products based on price range, color, and category
     @Override
     public List<Product> search(Integer categoryId, BigDecimal minPrice, BigDecimal maxPrice, String color)
     {
-        List<Product> products = new ArrayList<>();
+        List<Product> products = new ArrayList<>(); // List to store products
 
+        //SQL query to get category, price, and color from the database
         String sql = "SELECT * FROM products " +
                 "WHERE (category_id = ? OR ? = -1) " +
-                "   AND (price <= ? OR ? = -1) " +
+                "   AND (price >= ? OR ? = -1) " +
+                "AND (price <= ? OR ? = -1)"+
                 "   AND (color = ? OR ? = '') ";
 
         categoryId = categoryId == null ? -1 : categoryId;
@@ -35,15 +38,18 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
 
         try (Connection connection = getConnection())
         {
+            // Set parameters in SQL query
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, categoryId);
             statement.setInt(2, categoryId);
             statement.setBigDecimal(3, minPrice);
             statement.setBigDecimal(4, minPrice);
-            statement.setString(5, color);
-            statement.setString(6, color);
+            statement.setBigDecimal(5,maxPrice );
+            statement.setBigDecimal(6,maxPrice);
+            statement.setString(7, color);
+            statement.setString(8, color);
 
-            ResultSet row = statement.executeQuery();
+            ResultSet row = statement.executeQuery(); // Execute query and get results
 
             while (row.next())
             {
@@ -56,14 +62,16 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
             throw new RuntimeException(e);
         }
 
-        return products;
+        return products; // returns list of matching product
     }
 
+    // Lists products by category ID
     @Override
     public List<Product> listByCategoryId(int categoryId)
     {
-        List<Product> products = new ArrayList<>();
+        List<Product> products = new ArrayList<>(); // List to store products by category
 
+        // SQL query to get products by category from the database
         String sql = "SELECT * FROM products " +
                     " WHERE category_id = ? ";
 
@@ -72,7 +80,7 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, categoryId);
 
-            ResultSet row = statement.executeQuery();
+            ResultSet row = statement.executeQuery(); // Executes query
 
             while (row.next())
             {
@@ -85,20 +93,22 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
             throw new RuntimeException(e);
         }
 
-        return products;
+        return products; // Returns list of products by category
     }
 
 
+    // Gets product by ID number
     @Override
     public Product getById(int productId)
     {
+        // SQL query to get product by ID from database
         String sql = "SELECT * FROM products WHERE product_id = ?";
         try (Connection connection = getConnection())
         {
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setInt(1, productId);
 
-            ResultSet row = statement.executeQuery();
+            ResultSet row = statement.executeQuery(); // Executes the query
 
             if (row.next())
             {
@@ -112,10 +122,12 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
         return null;
     }
 
+    // Creates a new product in the database
     @Override
     public Product create(Product product)
     {
 
+        // SQL query to insert new product into the database
         String sql = "INSERT INTO products(name, price, category_id, description, color, image_url, stock, featured) " +
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
@@ -134,14 +146,13 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
             int rowsAffected = statement.executeUpdate();
 
             if (rowsAffected > 0) {
-                // Retrieve the generated keys
+
                 ResultSet generatedKeys = statement.getGeneratedKeys();
 
                 if (generatedKeys.next()) {
-                    // Retrieve the auto-incremented ID
+
                     int orderId = generatedKeys.getInt(1);
 
-                    // get the newly inserted category
                     return getById(orderId);
                 }
             }
@@ -153,6 +164,7 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
         return null;
     }
 
+    // Updates existing product in the database
     @Override
     public void update(int productId, Product product)
     {
@@ -188,6 +200,7 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
         }
     }
 
+    // Deletes product from the database by its ID
     @Override
     public void delete(int productId)
     {
