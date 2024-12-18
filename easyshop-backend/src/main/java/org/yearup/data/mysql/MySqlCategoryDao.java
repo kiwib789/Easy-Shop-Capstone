@@ -53,6 +53,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
     @Override
     public Category getById(int categoryId)
     {
+        // query
         String sql = "SELECT * FROM categories WHERE category_id = ?";
         Category category = null;
 
@@ -70,12 +71,22 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
 
         return category;
     }
-    // TODO create method
+    // create method ~DONE
     @Override
     public Category create(Category category)
     {
+        // query to create category
+        String sql = "INSERT INTO categories (name, description) VALUES (?, ?)";
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, category.getName());
+            statement.setString(2, category.getDescription());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         // create a new category
-        return null;
+        return category;
     }
     // TODO update method
     @Override
