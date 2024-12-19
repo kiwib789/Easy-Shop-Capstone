@@ -5,10 +5,7 @@ import org.yearup.data.CategoryDao;
 import org.yearup.models.Category;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +46,8 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
         // get all categories
         return categories;
     }
+
+
     // get category by Id ~DONE
     @Override
     public Category getById(int categoryId)
@@ -56,6 +55,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
         // query
         String sql = "SELECT * FROM categories WHERE category_id = ?";
         Category category = null;
+
 
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -71,23 +71,35 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
 
         return category;
     }
+
+
     // create method ~DONE
     @Override
     public Category create(Category category)
     {
+        Category newCategory = null;
         // query to create category
         String sql = "INSERT INTO categories (name, description) VALUES (?, ?)";
         try (Connection connection = getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+             PreparedStatement statement = connection.prepareStatement(sql,Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, category.getName());
             statement.setString(2, category.getDescription());
             statement.executeUpdate();
+            ResultSet generatedKeys = statement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+
+                int newCategoryId = generatedKeys.getInt(1);
+
+                newCategory =  getById(newCategoryId);
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         // create a new category
-        return category;
+        return newCategory;
     }
+
+
     // TODO update method
     @Override
     public void update(int categoryId, Category category)
@@ -124,6 +136,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
             throw new RuntimeException(e);
         }  // delete category
     }
+
 
     private Category mapRow(ResultSet row) throws SQLException
     {

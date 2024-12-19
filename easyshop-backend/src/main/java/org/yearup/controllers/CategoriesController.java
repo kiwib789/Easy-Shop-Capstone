@@ -2,7 +2,6 @@ package org.yearup.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -41,7 +40,7 @@ public class CategoriesController
     }
 
     // add the appropriate annotation for a get action ~DONE
-    @GetMapping("/{id}/")
+    @GetMapping("/{id}")
     public Category getById(@PathVariable int id) {
         // get the category by id
         Category category = categoryDao.getById(id);
@@ -66,7 +65,7 @@ public class CategoriesController
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Category addCategory(@RequestBody Category category)
+    public Category createCategory(@RequestBody Category category)
     {
         // insert the category ~DONE
         return categoryDao.create(category);
