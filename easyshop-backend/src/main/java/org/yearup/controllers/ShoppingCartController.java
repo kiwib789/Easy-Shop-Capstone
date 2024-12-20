@@ -104,7 +104,7 @@ public class ShoppingCartController
 
     // add a DELETE method to clear all products from the current users cart
     // https://localhost:8080/cart
-// Method to clear all products from the user's shopping cart
+    // Method to clear all products from the user's shopping cart
     @DeleteMapping
     @PreAuthorize("isAuthenticated()")
     public void clearCart(Principal principal) {

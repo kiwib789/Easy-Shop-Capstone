@@ -13,8 +13,10 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao {
         super(dataSource);
     }
 
+    // Method to create a profile
     @Override
     public Profile create(Profile profile) {
+        //SQL query to insert new information into profile
         String sql = "INSERT INTO profiles (user_id, first_name, last_name, phone, email, address, city, state, zip) " +
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
@@ -30,6 +32,7 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao {
             ps.setString(8, profile.getState());
             ps.setString(9, profile.getZip());
 
+            // Updates changes to profile
             ps.executeUpdate();
 
             return profile;

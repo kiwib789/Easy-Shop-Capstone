@@ -45,7 +45,11 @@ public class ProfileController {
             existingProfile.setLastName(updatedProfile.getLastName());
             existingProfile.setPhone(updatedProfile.getPhone());
             existingProfile.setEmail(updatedProfile.getEmail());
-
+            existingProfile.setAddress(updatedProfile.getAddress());
+            existingProfile.setCity(updatedProfile.getCity());
+            existingProfile.setState(updatedProfile.getState());
+            existingProfile.setZip(updatedProfile.getZip());
+            existingProfile.setUserId(updatedProfile.getUserId());
             // Save the updated profile
             Profile updated = profileDao.update(existingProfile);
 
