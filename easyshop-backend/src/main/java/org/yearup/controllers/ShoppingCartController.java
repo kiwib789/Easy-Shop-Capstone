@@ -9,6 +9,7 @@ import org.yearup.data.ShoppingCartDao;
 import org.yearup.data.UserDao;
 import org.yearup.models.Product;
 import org.yearup.models.ShoppingCart;
+import org.yearup.models.ShoppingCartItem;
 import org.yearup.models.User;
 
 import java.security.Principal;
@@ -69,7 +70,7 @@ public class ShoppingCartController
             Product product = productDao.getById(productId);
 
             // Add the product to the user's shopping cart
-            return shoppingCartDao.addProductToCart(userId, product);
+            return shoppingCartDao.addItemsToCart(userId, product);
         } catch (Exception e) {
             // Return an error response if something goes wrong
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
@@ -82,23 +83,22 @@ public class ShoppingCartController
     // Method to update the quantity of a product in the user's shopping cart
     @PutMapping("/products/{productId}")
     @PreAuthorize("isAuthenticated()")
-    public void updateProductInCart(@PathVariable int productId, @RequestBody int quantity, Principal principal){
+    public ShoppingCart updateProductInCart(Principal principal, @PathVariable int productId, @RequestBody ShoppingCartItem updatedItem) {
         try {
+            // Get the currently logged-in user's username
             String userName = principal.getName();
+            // Find the user by username
             User user = userDao.getByUserName(userName);
             int userId = user.getId();
 
-            var product = productDao.getById(productId);
-            if (product == null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "{Product not found");
-            }
-            boolean success = shoppingCartDao.updateProductQuantity(userId, productId, quantity);
-            if(!success){
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "did not update");
-            }
+            // Update the product's quantity in the user's shopping cart
+            shoppingCartDao.updateCart(userId, updatedItem, productId);
 
+            // Return the updated shopping cart
+            return shoppingCartDao.getByUserId(userId);
         } catch (Exception e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Ooooops");
+            // Return an error response if something goes wrong
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
 

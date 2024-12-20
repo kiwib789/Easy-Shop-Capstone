@@ -69,7 +69,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     }
     // Method to update the quantity of product in the users shopping cart
     @Override
-    public void updateProductQuantityInCart(int userId, ShoppingCartItem item, int productId) {
+    public void updateCart(int userId, ShoppingCartItem item, int productId) {
 
         try (Connection connection = getConnection()) {
             // SQL query to update product
@@ -117,7 +117,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
 
     //Method to add items to users shopping cart
     @Override
-    public ShoppingCart addProductToCart(int userId, Product product) {
+    public ShoppingCart addItemsToCart(int userId, Product product) {
         // Gets shopping cart from specific user
         ShoppingCart shoppingCart = getByUserId(userId);
 
