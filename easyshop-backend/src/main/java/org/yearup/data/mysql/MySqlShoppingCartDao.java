@@ -67,6 +67,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
         }
 
     }
+
     // Method to update the quantity of product in the users shopping cart
     @Override
     public void updateCart(int userId, ShoppingCartItem item, int productId) {
@@ -146,7 +147,6 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
             throw new RuntimeException(e);
         }
     }
-
 
 
 }
