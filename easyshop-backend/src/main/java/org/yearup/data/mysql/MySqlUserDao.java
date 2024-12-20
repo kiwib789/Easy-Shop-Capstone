@@ -48,6 +48,7 @@ public class MySqlUserDao extends MySqlDaoBase implements UserDao
         }
     }
 
+
     @Override
     public List<User> getAll()
     {
@@ -74,6 +75,7 @@ public class MySqlUserDao extends MySqlDaoBase implements UserDao
         return users;
     }
 
+
     @Override
     public User getUserById(int id)
     {
@@ -97,6 +99,7 @@ public class MySqlUserDao extends MySqlDaoBase implements UserDao
         }
         return null;
     }
+
 
     @Override
     public User getByUserName(String username)
@@ -139,12 +142,6 @@ public class MySqlUserDao extends MySqlDaoBase implements UserDao
         return -1;
     }
 
-    @Override
-    public boolean exists(String username)
-    {
-        User user = getByUserName(username);
-        return user != null;
-    }
 
     private User mapRow(ResultSet row) throws SQLException
     {
@@ -154,5 +151,12 @@ public class MySqlUserDao extends MySqlDaoBase implements UserDao
         String role = row.getString("role");
 
         return new User(userId, username,hashedPassword, role);
+    }
+
+    @Override
+    public boolean exists(String username)
+    {
+        User user = getByUserName(username);
+        return user != null;
     }
 }
